@@ -130,7 +130,7 @@ namespace Testr.API.Controllers
         [Authorize(Roles = "Candidate")]
         [HttpPut]
         [Route("update-profile")]
-        public async Task<IActionResult> UpdateProfile([FromBody] CandidateUpdateProfileDTO ProfileUpdate, long id)
+        public async Task<IActionResult> UpdateProfile([FromBody] CandidateUpdateProfileDTO profileUpdate, long id)
         {
             Response responseBody = new Response();
 
@@ -154,7 +154,7 @@ namespace Testr.API.Controllers
                 return BadRequest(responseBody);
             }
 
-            await _candidateRepo.UpdateAsync(ProfileUpdate, id);
+            await _candidateRepo.UpdateAsync(profileUpdate, id);
 
             responseBody.Message = $"Successfully updated the candidate with id {id}";
             responseBody.Status = "Success";
