@@ -129,5 +129,46 @@ namespace Testr.API.Controllers
             responseBody.Payload = null;
             return Created("", responseBody);
         }
+
+        [Authorize(Roles = "Candidate")]
+        [HttpPut]
+        [Route("update-profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody]CandidateUpdateProfileDTO ProfileUpdate, long id)
+        {
+            Response responseBody = new Response();
+           
+
+
+            //if input is left blank
+            if (id == null)
+            {
+                responseBody.Message = "Please enter a valid candidate Id";
+                responseBody.Status = "Failed";
+                responseBody.Payload = null;
+
+                return BadRequest(responseBody);
+
+            }
+            
+            //Check if specified id belongs to the currently logged in candidate
+            if ( _authHelper.GetCurrentCandidateId() != id)
+            {
+                responseBody.Message = "Sorry you are not permitted to edit this profile";
+                responseBody.Status = "Failed";
+                responseBody.Payload = null;
+
+                return BadRequest(responseBody);
+            }
+
+               await  _candidateRepo.UpdateAsync(ProfileUpdate, id);
+
+            responseBody.Message = $"Successfully updated the candidate with id {id}";
+            responseBody.Status = "Success";
+            responseBody.Payload = null;
+
+            return Ok (responseBody);
+
+
+        }
     }
 }
