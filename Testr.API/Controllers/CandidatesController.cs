@@ -27,7 +27,6 @@ namespace Testr.API.Controllers
             _authHelper = authHelper;
         }
 
-
         [HttpGet]
         [Authorize(Roles = "SuperAdmin, Admin")]
         public async Task<ActionResult<List<Candidate>>> GetAllCandidate()
@@ -37,7 +36,7 @@ namespace Testr.API.Controllers
            // Response body when fetched
             if (candidates != null)
             {
-                responseBody.Message = "Sucessfully fetched all candidates";
+                responseBody.Message = "Successfully fetched all candidates";
                 responseBody.Status = "Success";
                 responseBody.Payload = candidates;
                 return Ok(responseBody);
@@ -49,7 +48,6 @@ namespace Testr.API.Controllers
             responseBody.Payload = null;
             return Ok(responseBody);
         }
-
 
         [HttpGet("{id}")]
         [Authorize]
@@ -83,7 +81,6 @@ namespace Testr.API.Controllers
 
             return Ok(responseBody);
         }
-
 
         [AllowAnonymous]
         [HttpPost]
@@ -133,11 +130,9 @@ namespace Testr.API.Controllers
         [Authorize(Roles = "Candidate")]
         [HttpPut]
         [Route("update-profile")]
-        public async Task<IActionResult> UpdateProfile([FromBody]CandidateUpdateProfileDTO ProfileUpdate, long id)
+        public async Task<IActionResult> UpdateProfile([FromBody] CandidateUpdateProfileDTO ProfileUpdate, long id)
         {
             Response responseBody = new Response();
-           
-
 
             //if input is left blank
             if (id == null)
@@ -147,11 +142,10 @@ namespace Testr.API.Controllers
                 responseBody.Payload = null;
 
                 return BadRequest(responseBody);
-
             }
-            
+
             //Check if specified id belongs to the currently logged in candidate
-            if ( _authHelper.GetCurrentCandidateId() != id)
+            if (_authHelper.GetCurrentCandidateId() != id)
             {
                 responseBody.Message = "Sorry you are not permitted to edit this profile";
                 responseBody.Status = "Failed";
@@ -160,15 +154,13 @@ namespace Testr.API.Controllers
                 return BadRequest(responseBody);
             }
 
-               await  _candidateRepo.UpdateAsync(ProfileUpdate, id);
+            await _candidateRepo.UpdateAsync(ProfileUpdate, id);
 
             responseBody.Message = $"Successfully updated the candidate with id {id}";
             responseBody.Status = "Success";
             responseBody.Payload = null;
 
-            return Ok (responseBody);
-
-
+            return Ok(responseBody);
         }
     }
 }

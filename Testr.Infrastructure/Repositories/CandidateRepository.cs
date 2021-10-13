@@ -74,7 +74,5 @@ namespace Testr.Infrastructure.Repositories
             _context.Candidates.Update(candidateUpdate);
             await _context.SaveChangesAsync();
         }
-
-    
     }
 }
