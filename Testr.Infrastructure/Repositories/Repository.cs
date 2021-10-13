@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Testr.Domain.Entities;
 using Testr.Domain.Interfaces.Base;
 using Testr.Infrastructure.Authentication;
 
@@ -44,10 +45,15 @@ namespace Testr.Infrastructure.Repositories
             return await _context.Set<T>().FindAsync(id);
         }
 
-
-        public Task UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity, long id)
         {
-            throw new NotImplementedException();
+            
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+            
+          
         }
+
+      
     }
 }
