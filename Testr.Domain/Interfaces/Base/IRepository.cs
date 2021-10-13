@@ -8,7 +8,7 @@ namespace Testr.Domain.Interfaces.Base
         Task<IReadOnlyList<T>> GetAllAsync();
         Task<T> GetByIdAsync(long id);
         Task<T> AddAsync(T entity);
-        Task UpdateAsync(T entity);
+        Task UpdateAsync(T entity, long id);
         Task DeleteAsync(T entity);
     }
 }
