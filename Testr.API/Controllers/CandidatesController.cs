@@ -7,9 +7,12 @@ using Testr.Application.Helpers;
 using Testr.Domain.DTOs;
 using Testr.Domain.Entities;
 using Testr.Domain.Interfaces;
+using Testr.Infrastructure.EmailModel;
+using Testr.Infrastructure.EmailServices;
 
 namespace Testr.API.Controllers
-{   [Authorize]
+{   
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CandidatesController : ControllerBase
@@ -18,13 +21,15 @@ namespace Testr.API.Controllers
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ICandidateRepository _candidateRepo;
         private readonly IAuthorizationHelper _authHelper;
+        private readonly IMailService _mailService;
 
-        public CandidatesController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, ICandidateRepository candidate, IAuthorizationHelper authHelper)
+        public CandidatesController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMailService mailService, ICandidateRepository candidate, IAuthorizationHelper authHelper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _candidateRepo = candidate;
             _authHelper = authHelper;
+            _mailService = mailService;
         }
 
         [HttpGet]
@@ -155,6 +160,16 @@ namespace Testr.API.Controllers
             }
 
             await _candidateRepo.UpdateAsync(profileUpdate, id);
+
+            MailRequest mailRequest = new MailRequest()
+            {
+                ToEmail = profileUpdate.EmailAddress,
+                Body = $"Dear {profileUpdate.FirstName} {profileUpdate.LastName} \n your profile update was successful. " +
+                            "\n Please Click here http://thebulbafrica.com to Login and continue. " +
+                            "\n\n If you did not initiate this process, click here http://thebulbafrica.com to reset your password",
+                Subject = "Profile Update"
+            };
+            await _mailService.SendEmailAsync(mailRequest);
 
             responseBody.Message = $"Successfully updated the candidate with id {id}";
             responseBody.Status = "Success";
