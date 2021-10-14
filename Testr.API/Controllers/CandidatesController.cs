@@ -164,10 +164,10 @@ namespace Testr.API.Controllers
             MailRequest mailRequest = new MailRequest()
             {
                 ToEmail = profileUpdate.EmailAddress,
-                Body = $"Dear {profileUpdate.FirstName} {profileUpdate.LastName} \n your account update was successful. " +
+                Body = $"Dear {profileUpdate.FirstName} {profileUpdate.LastName} \n your profile update was successful. " +
                             "\n Please Click here http://thebulbafrica.com to Login and continue. " +
                             "\n\n If you did not initiate this process, click here http://thebulbafrica.com to reset your password",
-                Subject = "Account Update"
+                Subject = "Profile Update"
             };
             await _mailService.SendEmailAsync(mailRequest);
 
